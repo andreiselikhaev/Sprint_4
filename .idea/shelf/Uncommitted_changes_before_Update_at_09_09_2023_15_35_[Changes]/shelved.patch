@@ -1,0 +1,100 @@
+Index: package/main_page.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from selenium.webdriver.common.by import By\r\nfrom package.base_page import BasePage\r\n\r\nclass MainPage(BasePage):\r\n    text_element = (By.XPATH, \"//div[contains(@class, 'Home_SubHeader__zwi_E') and text()='Вопросы о важном']\")\r\n    order_box = (By.XPATH, \"//button[contains(@class, 'Button_Button__ra12g') and contains(text(), 'Заказать')]\")\r\n    scooter_box = (By.XPATH, \"//a[@class='Header_LogoScooter__3lsAR']\")\r\n    main_page_text = (By.CSS_SELECTOR, '.Home_Header__iJKdX')\r\n    yandex_box = (By.XPATH, \"//a[@class='Header_LogoYandex__3TSOI']\")\r\n    confirm_cookie_box = (By.XPATH, \"//button[@class='App_CookieButton__3cvqF']\")\r\n    actual_text = (By.TAG_NAME, 'p')\r\n    yandex_search = (By.CLASS_NAME, 'dzen-search-arrow-common')\r\n    question_buttons = [(By.XPATH, '//div[@id=\"accordion__heading-0\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__heading-1\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__heading-2\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__heading-3\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__heading-4\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__heading-5\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__heading-6\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__heading-7\"]')]\r\n    question_answers = [(By.XPATH, '//div[@id=\"accordion__panel-0\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__panel-1\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__panel-2\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__panel-3\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__panel-4\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__panel-5\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__panel-6\"]'),\r\n                        (By.XPATH, '//div[@id=\"accordion__panel-7\"]'),\r\n                        ]\r\n\r\n    def confirm_cookie(self):\r\n        BasePage.click_button(self, MainPage.confirm_cookie_box)\r\n\r\n    def find_question(self, question_number):\r\n        text_element = self.wait_element_located(MainPage.text_element)\r\n        self.scroll_until_element(text_element)\r\n        MainPage.click_button(self, MainPage.question_buttons[question_number])\r\n\r\n    def find_answer(self, question_number):\r\n        answer_text = self.driver.find_element(*MainPage.question_answers[question_number])\r\n        actual_text = answer_text.find_element(*MainPage.actual_text).text\r\n        return actual_text\r\n\r\n    def make_an_order_click(self, type_order_box):\r\n        order_boxs = self.driver.find_elements(*MainPage.order_box)\r\n        if type_order_box == 'first':\r\n            order_boxs[0].click()\r\n        elif type_order_box == 'second':\r\n            order_boxs[1].click()\r\n\r\n    def click_scooter_logo(self):\r\n        scooter_box = self.wait_element_clickable(MainPage.scooter_box)\r\n        scooter_box.click()\r\n\r\n    def find_main_page_text(self):\r\n        main_page_text = self.wait_element_located(MainPage.main_page_text)\r\n        return main_page_text.text\r\n\r\n    def click_yandex_logo(self):\r\n        yandex_box = self.wait_element_clickable(MainPage.yandex_box)\r\n        yandex_box.click()\r\n        self.wait_window_is_opened()\r\n        self.driver.switch_to.window(self.driver.window_handles[-1])\r\n\r\n    def check_new_tab(self):\r\n        self.wait_element_located(MainPage.yandex_search)\r\n        new_tab_url = self.driver.current_url\r\n        return new_tab_url\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/package/main_page.py b/package/main_page.py
+--- a/package/main_page.py	(revision 0705a6359811bacca4757e41640c99edb0666833)
++++ b/package/main_page.py	(date 1694261752595)
+@@ -1,4 +1,5 @@
+ from selenium.webdriver.common.by import By
++<<<<<<< HEAD
+ from package.base_page import BasePage
+ 
+ class MainPage(BasePage):
+@@ -39,6 +40,48 @@
+     def find_answer(self, question_number):
+         answer_text = self.driver.find_element(*MainPage.question_answers[question_number])
+         actual_text = answer_text.find_element(*MainPage.actual_text).text
++=======
++from selenium.webdriver.support.ui import WebDriverWait
++from selenium.webdriver.support import expected_conditions as EC
++
++class MainPage:
++    def __init__(self, driver):
++        self.driver = driver
++        self.wait = WebDriverWait(driver, 10)
++
++    # Локатор для скролла до вопросов
++    text_element = (By.XPATH, "//div[contains(@class, 'Home_SubHeader__zwi_E') and text()='Вопросы о важном']")
++
++    # Локатор кнопки заказа
++    order_box = (By.XPATH, "//button[contains(@class, 'Button_Button__ra12g') and contains(text(), 'Заказать')]")
++
++    # Локатор для кнопки "Самокат"
++    scooter_box = (By.XPATH, "//a[@class='Header_LogoScooter__3lsAR']")
++
++    # Локатор текст на главное странице
++    main_page_text = (By.CSS_SELECTOR, '.Home_Header__iJKdX')
++
++    # Локатор для кнопки "Яндекс"
++    yandex_box = (By.XPATH, "//a[@class='Header_LogoYandex__3TSOI']")
++
++    # Локатор для кнопки куки
++    confirm_cookie_box = (By.XPATH, "//button[@class='App_CookieButton__3cvqF']")
++
++    def confirm_cookie(self):
++        button = self.wait.until(EC.element_to_be_clickable(MainPage.confirm_cookie_box))
++        button.click()
++
++    def find_question(self, question_number):
++        text_element = self.wait.until(EC.presence_of_element_located(MainPage.text_element))
++        self.driver.execute_script("arguments[0].scrollIntoView();", text_element)
++
++        button = self.wait.until(EC.element_to_be_clickable((By.XPATH, f'//div[@id="accordion__heading-{question_number}"]')))
++        button.click()
++
++    def find_answer(self, question_number):
++        answer_text = self.driver.find_element(By.XPATH, f'//div[@id="accordion__panel-{question_number}"]')
++        actual_text = answer_text.find_element(By.TAG_NAME, 'p').text
++>>>>>>> origin/develop
+         return actual_text
+ 
+     def make_an_order_click(self, type_order_box):
+@@ -48,6 +91,7 @@
+         elif type_order_box == 'second':
+             order_boxs[1].click()
+ 
++<<<<<<< HEAD
+     def click_scooter_logo(self):
+         scooter_box = self.wait_element_clickable(MainPage.scooter_box)
+         scooter_box.click()
+@@ -66,3 +110,26 @@
+         self.wait_element_located(MainPage.yandex_search)
+         new_tab_url = self.driver.current_url
+         return new_tab_url
++=======
++    def find_scooter_logo(self):
++        scooter_box = self.wait.until(EC.element_to_be_clickable(MainPage.scooter_box))
++        scooter_box.click()
++
++    def find_main_page_text(self):
++        main_page_text = self.wait.until(EC.presence_of_element_located(MainPage.main_page_text))
++        return main_page_text.text
++
++    def find_yandex_logo(self):
++        yandex_box = self.wait.until(EC.element_to_be_clickable(MainPage.yandex_box))
++        yandex_box.click()
++        self.wait.until(EC.new_window_is_opened)
++        self.driver.switch_to.window(self.driver.window_handles[-1])
++
++    def check_new_tab(self):
++        self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'dzen-search-arrow-common')))
++        new_tab_url = self.driver.current_url
++        return new_tab_url
++
++
++
++>>>>>>> origin/develop
